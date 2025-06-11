@@ -35,4 +35,6 @@ typedef struct Cliente{
     struct Cliente *prox; 
 }Cliente; 
 
-int main(){}
+int main(){
+    ler_arquivo("estoque.txt");
+}
