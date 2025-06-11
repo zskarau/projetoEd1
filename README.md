@@ -6,3 +6,8 @@ Principal ideia: Desenvolver um sistema em linguagem C que realize o controle de
 Os dados serão carregados a partir de arquivos .txt e organizados dinamicamente utilizando listas encadeadas.O sistema deverá prever automaticamente a demanda para o próximo trimestre com base
 nas vendas anteriores. 
 
+## Como Executar
+Para maior ordem de código, para compilar e rodar basta digitar no terminal:
+**make**
+E para excluir o output:
+**make clean**
