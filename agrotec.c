@@ -3,6 +3,7 @@
 #include "funcoes.h"
 
 int main(){
-    carregar_estoque("estoque.txt");
-    carregar_precos("precos.txt");
+    Produto *lista = NULL;
+    carregar_estoque("estoque.txt", &lista);
+    imprimir(lista);
 }
