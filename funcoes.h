@@ -39,5 +39,7 @@ Produto *alocar(int codigo, char nome[], char categoria[], int quantidade);
 void inserirProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]);
 void imprimir(Produto *p);
 void carregar_estoque(char *tipo_arquivo, Produto **p);
+void carregar_historico(char *tipo_arquivo, Produto **p);
+void processar_pedidos(char *tipo_arquivo, Produto **p)
 
 #endif
