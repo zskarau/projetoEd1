@@ -47,3 +47,18 @@ void carregar_estoque(char *tipo_arquivo, Produto **p){
         }
     }
 }
+
+void carregar_historico(char *tipo_arquivo, Produto **p){
+
+    FILE *arquivo = fopen(tipo_arquivo, "r");
+    if(!arquivo){
+        printf("Não foi possível abrir o arquivo.");
+    }
+    else{
+
+    }
+}
+
+void processar_pedidos(char *tipo_arquivo, Produto **p){
+
+}
