@@ -48,17 +48,75 @@ void carregar_estoque(char *tipo_arquivo, Produto **p){
     }
 }
 
-void carregar_historico(char *tipo_arquivo, Produto **p){
+HistoricoVendas *alocarHistorico(int codigo, int vendas[]){
 
+//Laço para alocar o historico usando for, pq e necessário um vetor de 4 inteiros nas vendas
+    int i;
+    HistoricoVendas *novo = NULL;
+    novo = (HistoricoVendas *)malloc(sizeof(HistoricoVendas));
+
+    if(novo){
+        novo->codigo = codigo;
+
+        for(i = 0; i < 4; i++){
+            novo->vendas[i] = vendas[i];
+        }
+        novo->prox = NULL;
+    }
+
+    return novo;
+}
+
+void insereHistorico(HistoricoVendas **hv, int codigo, int vendas[]){
+
+//Insere o historico na lista
+    HistoricoVendas *aux = NULL;
+
+    aux = alocarHistorico(codigo, vendas);
+
+    if(aux){
+        aux->prox = *hv;
+        *hv = aux;
+    }
+}
+
+void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv){
+
+//carrega o historico em um laço e coloca dentro da lista 
     FILE *arquivo = fopen(tipo_arquivo, "r");
+
     if(!arquivo){
         printf("Não foi possível abrir o arquivo.");
     }
-    else{
 
+    else{
+        int codigo, vendas[4];
+
+        while(fscanf(arquivo, "%d%d%d%d%d", &codigo, &vendas[0], &vendas[1], &vendas[2], &vendas[3]) != EOF){
+            insereHistorico(hv, codigo, vendas);
+        }
+
+        fclose(arquivo);
+        printf("Historico Carregado!\n");
+    }
+}
+
+void imprimirHistorico(HistoricoVendas *hv){
+
+//Imprime o historico de vendas
+    HistoricoVendas *temp = hv;
+
+    if(temp == NULL){
+        printf("\nLista vazia\n");
+        return;
+    }
+
+    while(temp){
+        printf("Codigo: %d Venda 1: %d Venda 2: %d Venda 3: %d Venda 4: %d\n", temp->codigo, temp->vendas[0], temp->vendas[1], temp->vendas[2], temp->vendas[3]);
+        temp = temp->prox;
     }
 }
 
 void processar_pedidos(char *tipo_arquivo, Produto **p){
-
+    
 }
