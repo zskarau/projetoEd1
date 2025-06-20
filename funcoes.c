@@ -49,8 +49,7 @@ void carregar_estoque(char *tipo_arquivo, Produto **p){
 }
 
 HistoricoVendas *alocarHistorico(int codigo, int vendas[]){
-
-//Laço para alocar o historico usando for, pq e necessário um vetor de 4 inteiros nas vendas
+//laço para alocar o historico usando for, pq e necessário um vetor de 4 inteiros nas vendas
     int i;
     HistoricoVendas *novo = NULL;
     novo = (HistoricoVendas *)malloc(sizeof(HistoricoVendas));
@@ -68,8 +67,7 @@ HistoricoVendas *alocarHistorico(int codigo, int vendas[]){
 }
 
 void insereHistorico(HistoricoVendas **hv, int codigo, int vendas[]){
-
-//Insere o historico na lista
+//insere o historico na lista
     HistoricoVendas *aux = NULL;
 
     aux = alocarHistorico(codigo, vendas);
@@ -81,7 +79,6 @@ void insereHistorico(HistoricoVendas **hv, int codigo, int vendas[]){
 }
 
 void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv){
-
 //carrega o historico em um laço e coloca dentro da lista 
     FILE *arquivo = fopen(tipo_arquivo, "r");
 
@@ -102,8 +99,7 @@ void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv){
 }
 
 void imprimirHistorico(HistoricoVendas *hv){
-
-//Imprime o historico de vendas
+//imprime o historico de vendas
     HistoricoVendas *temp = hv;
 
     if(temp == NULL){
@@ -116,6 +112,8 @@ void imprimirHistorico(HistoricoVendas *hv){
         temp = temp->prox;
     }
 }
+
+void prever_compras();
 
 void processar_pedidos(char *tipo_arquivo, Produto **p){
     
