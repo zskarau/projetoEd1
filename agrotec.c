@@ -20,9 +20,9 @@ int main(){
     do{
         printf("\n==========|||||==========\n");
         printf("\nMenu AgroTec, escolha o que deseja: \n");
-        printf("\n0 - Sair \n1 - Carregar dados do Estoque \n2 - Carregar dados do Historico \n3 - Carregar dados do Pedido\n");
-        printf("5 - Inserir novo produto \n6 - Inserir nova venda \n7 - Inserir novo cliente \n8 - Processar Pedidos\n");
-        printf("9 - Prever compras \n10 - Gerar Relatorio Final\n");
+        printf("\n0 - Sair \n1 - Carregar dados do Estoque \n2 - Carregar Precos \n3 - Carregar Historico\n4 - Carregar Pedidos");
+        printf("5 - Inserir Novo Produto \n6 - Inserir Nova Venda \n7 - Inserir Novo Cliente \n8 - Processar Pedidos\n");
+        printf("9 - Prever Compras \n10 - Gerar Relatorio Final\n");
         printf("\n==========|||||==========\n");   
         printf("\n");     
         scanf("%d", &opc);
@@ -41,8 +41,12 @@ int main(){
                 //carregar_precos();
             break;
 
-            case 4:
+            case 3:
                 carregar_historico("historico_vendas.txt", &hv);
+            break;
+
+            case 4:
+                carregar_clientes_pedidos("clientes_pedidos.txt", &cl);
             break;
 
             case 5:
