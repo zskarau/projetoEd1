@@ -115,13 +115,12 @@ void imprimirHistorico(HistoricoVendas *hv){
 
 void prever_compras(HistoricoVendas *hv){
 //prever compra de cada codigo de produto do historico de vendas usando while
-
     HistoricoVendas *temp = hv;
     float mediavendas = 0;
 
     if(temp == NULL){
 
-        printf("Nenhum historico de vendas encontrado.\n");
+        printf("\nNenhum historico de vendas encontrado.\n");
         return;
     }
 

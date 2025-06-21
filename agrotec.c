@@ -3,7 +3,7 @@
 #include "funcoes.h"
 
 int main(){
-    int opc = 9;
+    int opc = -1;
 
     Produto *lista = NULL;
     HistoricoVendas *hv = NULL;
@@ -11,9 +11,9 @@ int main(){
     carregar_estoque("estoque.txt", &lista);
     imprimir(lista);
 
-    carregar_historico("historico_vendas.txt", &hv);
-    imprimirHistorico(hv);
-    prever_compras(hv);
+    //carregar_historico("historico_vendas.txt", &hv);
+    //imprimirHistorico(hv);
+    //prever_compras(hv);
 
     do{
         printf("\n==========|||||==========\n");
@@ -21,7 +21,8 @@ int main(){
         printf("\n0 - Sair \n1 - Carregar dados do Estoque \n2 - Carregar dados do Historico \n3 - Carregar dados do Pedido\n");
         printf("5 - Inserir novo produto \n6 - Inserir nova venda \n7 - Inserir novo cliente \n8 - Processar Pedidos\n");
         printf("9 - Prever compras \n10 - Gerar Relatorio Final\n");
-        printf("\n==========|||||==========\n");        
+        printf("\n==========|||||==========\n");   
+        printf("\n");     
         scanf("%d", &opc);
 
         switch(opc){   
@@ -59,7 +60,7 @@ int main(){
             break;
 
             case 9:
-                prever_compras(&hv);
+                prever_compras(hv);
             break;
 
             case 10:
@@ -67,7 +68,7 @@ int main(){
             break;
 
             default:
-                printf("Opcao inválida, tente novamente.\n");
+                printf("\nOpcao invalida, tente novamente.\n");
         }
 
     }while(opc != 0);
