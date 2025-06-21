@@ -42,7 +42,7 @@ void carregar_estoque(char *tipo_arquivo, Produto **p);
 void insereHistorico(HistoricoVendas **hv, int codigo, int vendas[]);
 void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv);
 void imprimirHistorico(HistoricoVendas *hv);
-void prever_compras();
+void prever_compras(HistoricoVendas *hv);
 void processar_pedidos(char *tipo_arquivo, Produto **p);
 
 #endif

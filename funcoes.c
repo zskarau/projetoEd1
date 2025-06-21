@@ -113,7 +113,25 @@ void imprimirHistorico(HistoricoVendas *hv){
     }
 }
 
-void prever_compras();
+void prever_compras(HistoricoVendas *hv){
+//prever compra de cada codigo de produto do historico de vendas usando while
+
+    HistoricoVendas *temp = hv;
+    float mediavendas = 0;
+
+    if(temp == NULL){
+
+        printf("Nenhum historico de vendas encontrado.\n");
+        return;
+    }
+
+    while(temp){
+
+        mediavendas = (temp->vendas[0] + temp->vendas[1] + temp->vendas[2] + temp->vendas[3]) / 4.0;
+        printf("Produto %d - Media = %.2f unidades vendidas\n", temp->codigo, mediavendas);
+        temp = temp->prox;
+    }
+}
 
 void processar_pedidos(char *tipo_arquivo, Produto **p){
     
