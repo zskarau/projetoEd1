@@ -3,7 +3,7 @@
 #include <string.h>
 #include "funcoes.h"
 
-Produto *alocar(int codigo, char nome[], char categoria[], int quantidade){
+Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade){
     Produto *novo = NULL;
     novo = (Produto *)malloc(sizeof(Produto));
     if(novo){
@@ -18,7 +18,7 @@ Produto *alocar(int codigo, char nome[], char categoria[], int quantidade){
 
 void inserirProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]){
     Produto *aux = NULL;
-    aux = alocar(codigo, nome, categoria, quantidade);
+    aux = alocarProduto(codigo, nome, categoria, quantidade);
     if(aux){
         aux->prox = *p;
         *p = aux;
@@ -132,6 +132,6 @@ void prever_compras(HistoricoVendas *hv){
     }
 }
 
-void processar_pedidos(char *tipo_arquivo, Produto **p){
+void processar_pedidos(Produto *p, Cliente *cl){
     
 }

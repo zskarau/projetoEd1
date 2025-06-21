@@ -7,6 +7,8 @@ int main(){
 
     Produto *lista = NULL;
     HistoricoVendas *hv = NULL;
+    Cliente *cl = NULL;
+    Pedido *pedidos = NULL;
 
     carregar_estoque("estoque.txt", &lista);
     imprimir(lista);
