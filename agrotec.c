@@ -8,19 +8,11 @@ int main(){
     Produto *lista = NULL;
     HistoricoVendas *hv = NULL;
     Cliente *cl = NULL;
-    Pedido *pedidos = NULL;
-
-    carregar_estoque("estoque.txt", &lista);
-    imprimir(lista);
-
-    //carregar_historico("historico_vendas.txt", &hv);
-    //imprimirHistorico(hv);
-    //prever_compras(hv);
 
     do{
         printf("\n==========|||||==========\n");
         printf("\nMenu AgroTec, escolha o que deseja: \n");
-        printf("\n0 - Sair \n1 - Carregar dados do Estoque \n2 - Carregar Precos \n3 - Carregar Historico\n4 - Carregar Pedidos");
+        printf("\n0 - Sair \n1 - Carregar Dados do Estoque \n2 - Carregar Precos \n3 - Carregar Historico\n4 - Carregar Pedidos\n");
         printf("5 - Inserir Novo Produto \n6 - Inserir Nova Venda \n7 - Inserir Novo Cliente \n8 - Processar Pedidos\n");
         printf("9 - Prever Compras \n10 - Gerar Relatorio Final\n");
         printf("\n==========|||||==========\n");   
@@ -35,6 +27,7 @@ int main(){
 
             case 1:
                 carregar_estoque("estoque.txt", &lista);    
+                imprimeEstoque(lista);
             break;
 
             case 2:
@@ -43,10 +36,12 @@ int main(){
 
             case 3:
                 carregar_historico("historico_vendas.txt", &hv);
+                imprimeHistorico(hv);
             break;
 
             case 4:
                 carregar_clientes_pedidos("clientes_pedidos.txt", &cl);
+                imprimeClientes(cl);
             break;
 
             case 5:

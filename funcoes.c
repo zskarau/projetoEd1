@@ -25,7 +25,7 @@ void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char ca
     }
 }
 
-void imprimir(Produto *p){
+void imprimeEstoque(Produto *p){
     Produto *aux = p;
     if(!aux) printf("Lista vazia\n");
     else{
@@ -43,7 +43,7 @@ void carregar_estoque(char *tipo_arquivo, Produto **p){
         int codigo, quantidade;
         char nome[20], categoria[20];
         while(fscanf(arquivo, "%d%s%d%s", &codigo, nome, &quantidade, categoria) != EOF){
-            inserirProduto(p, codigo, nome, quantidade, categoria);
+            insereProduto(p, codigo, nome, quantidade, categoria);
         }
 
         fclose(arquivo);
@@ -101,7 +101,7 @@ void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv){
     }
 }
 
-void imprimirHistorico(HistoricoVendas *hv){
+void imprimeHistorico(HistoricoVendas *hv){
 //imprime o historico de vendas
     HistoricoVendas *temp = hv;
 
@@ -131,6 +131,17 @@ Cliente *alocarCliente(int id_cliente, char nome[]){
     return cl;
 }
 
+Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]){
+
+    while(cl){
+        if(cl->id_cliente == id_cliente && !strcmp(cl->nome, nome)){
+            return cl;
+        }
+        cl = cl->prox;
+    }
+    return NULL;
+}
+
 void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int id_codigo_produto, int quantidade){
 
     Cliente *novo = buscarCliente(*cl, id_cliente, nome);
@@ -143,17 +154,6 @@ void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int
 
     inserePedido(&(novo->pedidos), id_pedido, id_codigo_produto, quantidade);
 
-}
-
-Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]){
-
-    while(cl){
-        if(cl->id_cliente == id_cliente && !strcmp(cl->nome, nome)){
-            return cl;
-        }
-        cl = cl->prox;
-    }
-    return NULL;
 }
 
 Pedido *alocarPedido(int id_pedido){
@@ -193,6 +193,7 @@ void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int qu
         *pedidos = novo;
     }
 
+    insereItens(&(novo->itens), id_codigo_produto, quantidade);
 }
 
 PedidoItem *alocarItens(int codigo_produto, int quantidade){
@@ -210,14 +211,14 @@ PedidoItem *alocarItens(int codigo_produto, int quantidade){
     return novoPI;
 }
 
-void insereItens(PedidoItem **pedidoitem, int codigo_produto, int quantidade){
+void insereItens(PedidoItem **pedidoItem, int codigo_produto, int quantidade){
     
     PedidoItem *novo = NULL;
     novo = alocarItens(codigo_produto, quantidade);
     
     if(novo){
-        novo->prox = *pedidoitem;
-        *pedidoitem = novo;
+        novo->prox = *pedidoItem;
+        *pedidoItem = novo;
     }
 
 }
@@ -242,6 +243,28 @@ void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl){
         fclose(arquivo);
         printf("Historico Carregado!\n");
     }
+}
+
+void imprimeClientes(Cliente *cl){
+    
+    while(cl){
+        printf("Id: %d Nome: %s\n", cl->id_cliente, cl->nome);
+        Pedido *pedido = cl->pedidos;
+
+        while(pedido){
+            printf("Id Pedido: %d\n", pedido->id_pedido);
+            PedidoItem *itens = pedido->itens;
+
+            while(itens){
+                printf("Id Item: %d Quantidade: %d\n", itens->codigo_produto, itens->quantidade);
+                itens = itens->prox;
+            }
+
+            pedido = pedido->prox;
+        }
+        cl = cl->prox;
+    }
+
 }
 
 void processar_pedidos(Produto *p, Cliente *cl){
