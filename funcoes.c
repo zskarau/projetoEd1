@@ -262,7 +262,7 @@ void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoqu
         }
 
         fclose(arquivo);
-        printf("Historico Carregado!\n");
+        printf("Clientes Carregados!\n");
     }
 }
 
