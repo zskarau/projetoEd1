@@ -142,7 +142,7 @@ Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]){
     return NULL;
 }
 
-void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int id_codigo_produto, int quantidade){
+void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque){
 
     Cliente *novo = buscarCliente(*cl, id_cliente, nome);
 
@@ -152,7 +152,7 @@ void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int
         *cl = novo;
     }
 
-    inserePedido(&(novo->pedidos), id_pedido, id_codigo_produto, quantidade);
+    inserePedido(&(novo->pedidos), id_pedido, id_codigo_produto, quantidade, estoque);
 
 }
 
@@ -171,14 +171,14 @@ Pedido *alocarPedido(int id_pedido){
     return novoP;
 }
 
-void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int quantidade){
+void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque){
 
     Pedido *aux = *pedidos;
 
     while(aux){
     
         if(aux->id_pedido == id_pedido){
-            insereItens(&(aux->itens), id_codigo_produto, quantidade);
+            insereItens(&(aux->itens), id_codigo_produto, quantidade, estoque);
             return;
         }
 
@@ -193,7 +193,7 @@ void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int qu
         *pedidos = novo;
     }
 
-    insereItens(&(novo->itens), id_codigo_produto, quantidade);
+    insereItens(&(novo->itens), id_codigo_produto, quantidade, estoque);
 }
 
 PedidoItem *alocarItens(int codigo_produto, int quantidade){
@@ -211,23 +211,40 @@ PedidoItem *alocarItens(int codigo_produto, int quantidade){
     return novoPI;
 }
 
-void insereItens(PedidoItem **pedidoItem, int codigo_produto, int quantidade){
-    
+void insereItens(PedidoItem **pedidoItem, int codigo_produto, int quantidade, Produto *estoque){
+
+    Produto *aux = processar_pedidos(codigo_produto, estoque);
+
+    if(!aux){
+        printf("Produto Não Encontrado!\n");
+        return;
+    }
+
+    if(aux->quantidade < quantidade){
+        printf("Quantidade em Estoque Não Suficente!\n");
+        return;
+    }
+
     PedidoItem *novo = NULL;
     novo = alocarItens(codigo_produto, quantidade);
     
     if(novo){
         novo->prox = *pedidoItem;
         *pedidoItem = novo;
+        aux->quantidade -= quantidade;
     }
-
 }
 
-void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl){
+void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoque){
     FILE *arquivo = fopen(tipo_arquivo, "r");
 
     if(!arquivo){
-        printf("Não foi possível abrir o arquivo.");
+        printf("Não foi possível abrir o arquivo.\n");
+        return;
+    }
+
+    if(!estoque){ //não há produtos no estoque
+        printf("Estoque Vazio!\n");
     }
 
     else{
@@ -236,7 +253,7 @@ void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl){
 
         while(fscanf(arquivo, "%d%s%d%d%d", &id_cliente, nome, &id_pedido, &id_codigo_produto, &quantidade) != EOF){
             
-            insereCliente(cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade);
+            insereCliente(cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, estoque);
 
         }
 
@@ -267,8 +284,17 @@ void imprimeClientes(Cliente *cl){
 
 }
 
-void processar_pedidos(Produto *p, Cliente *cl){
+Produto *processar_pedidos(int codigo_produto, Produto *estoque){
     
+    Produto *aux = estoque;
+
+    while(aux){
+        if(aux->codigo == codigo_produto){ //achou o produto que o cliente pediu
+            return aux;
+        }
+        aux = aux->prox;
+    }
+    return NULL;
 }
 
 void prever_compras(HistoricoVendas *hv){

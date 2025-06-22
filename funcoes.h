@@ -51,12 +51,12 @@ void imprimeHistorico(HistoricoVendas *hv);
 Cliente *alocarCliente(int id_cliente, char nome[]);
 Pedido *alocarPedidos(int id_pedido);
 PedidoItem *alocarItens(int codigo_produto, int quantidade);
-void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int id_codigo_produto, int quantidade);
-void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int quantidade);
-void insereItens(PedidoItem **pedidoitem, int codigo_produto, int quantidade);
-void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl);
+void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque);
+void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque);
+void insereItens(PedidoItem **pedidoitem, int codigo_produto, int quantidade, Produto *estoque);
+void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoque);
 void imprimeClientes(Cliente *cl);
-void processar_pedidos(Produto *p, Cliente *cl);
+Produto *processar_pedidos(int codigo_produto, Produto *estoque);
 
 void prever_compras(HistoricoVendas *hv);
 

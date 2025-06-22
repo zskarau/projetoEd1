@@ -40,7 +40,7 @@ int main(){
             break;
 
             case 4:
-                carregar_clientes_pedidos("clientes_pedidos.txt", &cl);
+                carregar_clientes_pedidos("clientes_pedidos.txt", &cl, lista);
                 imprimeClientes(cl);
             break;
 
@@ -67,7 +67,7 @@ int main(){
             case 10:
                 //relatorio_final();
             break;
-
+            
             default:
                 printf("\nOpcao invalida, tente novamente.\n");
         }
