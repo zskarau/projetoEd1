@@ -4,6 +4,7 @@
 #include "funcoes.h"
 
 Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade){
+
     Produto *novo = NULL;
     novo = (Produto *)malloc(sizeof(Produto));
     if(novo){
@@ -17,6 +18,7 @@ Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade
 }
 
 void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]){
+
     Produto *aux = NULL;
     aux = alocarProduto(codigo, nome, categoria, quantidade);
     if(aux){
@@ -26,6 +28,7 @@ void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char ca
 }
 
 void imprimeEstoque(Produto *p){
+
     Produto *aux = p;
     if(!aux) printf("Lista vazia\n");
     else{
@@ -37,6 +40,7 @@ void imprimeEstoque(Produto *p){
 }
 
 void carregar_estoque(char *tipo_arquivo, Produto **p){
+    
     FILE *arquivo = fopen(tipo_arquivo, "r");
     if(!arquivo) printf("Não foi possível abrir o arquivo.");
     else{

@@ -44,17 +44,79 @@ int main(){
                 imprimeClientes(cl);
             break;
 
-            case 5:
-                //inserir_novo_produto();
-            break;
+            case 5:{
 
-            case 6:
-                //inserir_nova_venda();
-            break;
+                int codigo, quantidade;
+                char nome[30], categoria[30];
 
-            case 7:
-                //inserir_novo_cliente();
-            break;
+                printf("Digite o codigo do produto: \n");
+                scanf("%d", &codigo);
+                printf("Digite o nome do produto: \n");
+                scanf("%s", nome);
+                printf("Digite a categoria do produto: \n");
+                scanf("%s", categoria);
+                printf("Digite a quantidade de estoque: \n");
+                scanf("%d", &quantidade);
+
+                insereProduto(&lista, codigo, nome, quantidade, categoria);
+
+                printf("\nProduto Inserido!\n");
+
+                break;
+            }
+
+            case 6:{
+                
+                int id_pedido, id_cliente, id_codigo_produto, quantidade;
+                char nome[30];
+                
+                printf("Digite o ID do cliente: \n");
+                scanf("%d", &id_cliente);
+                printf("Digite o nome do cliente: \n");
+                scanf("%s", nome);
+                printf("Digite o ID do pedido: \n");
+                scanf("%d", &id_pedido);
+                printf("Digite o ID codigo do produto: \n");
+                scanf("%d", &id_codigo_produto);
+                printf("Digite a quantidade: \n");
+                scanf("%d", &quantidade);
+
+                insereCliente(&cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, lista);
+                
+                printf("\nNova venda inserida!\n");
+
+                break;
+            }
+                
+            case 7:{
+
+                int id_cliente;
+                char nome_cliente[30];
+
+                printf("Digite o ID do novo cliente: \n");
+                scanf("%d", &id_cliente);
+                printf("Digite o nome do novo cliente: \n");
+                scanf("%s", nome_cliente);
+
+                Cliente *existe = buscarCliente(cl, id_cliente, nome_cliente);//busca para ver se ja existe
+
+                if(existe){
+
+                    printf("\nCliente ja cadastrado!\n");
+                }
+
+                else{
+                    //se caso nao existe, ira alocar normalmente um novo cliente
+                    Cliente *novo = alocarCliente(id_cliente, nome_cliente);
+                    
+                    novo->prox = cl; 
+                    cl = novo; 
+
+                    printf("\nCliente novo cadastrado!\n");
+                }
+
+                break;
+            }
 
             case 8:
                //processar_pedidos();

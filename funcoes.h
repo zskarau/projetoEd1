@@ -55,6 +55,7 @@ void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int
 void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque);
 void insereItens(PedidoItem **pedidoitem, int codigo_produto, int quantidade, Produto *estoque);
 void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoque);
+Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]);
 void imprimeClientes(Cliente *cl);
 Produto *processar_pedidos(int codigo_produto, Produto *estoque);
 
