@@ -3,31 +3,31 @@
 #include "funcoes.h"
 
 int main(){
-    int opc = -1;
+    int opcao;
 
-    Produto *lista = NULL;
-    HistoricoVendas *hv = NULL;
-    Cliente *cl = NULL;
+    Produto *estoque = NULL; //ponteiro para o estoque
+    HistoricoVendas *hv = NULL; //ponteiro para o historico de vendas
+    Cliente *cl = NULL; //ponteiro para o primeiro cliente
 
     do{
         printf("\n==========|||||==========\n");
         printf("\nMenu AgroTec, escolha o que deseja: \n");
         printf("\n0 - Sair \n1 - Carregar Dados do Estoque \n2 - Carregar Precos \n3 - Carregar Historico\n4 - Carregar Pedidos\n");
         printf("5 - Inserir Novo Produto \n6 - Inserir Nova Venda \n7 - Inserir Novo Cliente \n8 - Processar Pedidos\n");
-        printf("9 - Prever Compras \n10 - Gerar Relatorio Final\n");
+        printf("9 - Estoque \n10 - Clientes e Pedidos \n11 - Historico Vendas\n");
+        printf("12 - Prever Compras \n13 - Gerar Relatorio Final\n");
         printf("\n==========|||||==========\n");   
         printf("\n");     
-        scanf("%d", &opc);
+        scanf("%d", &opcao);
 
-        switch(opc){   
+        switch(opcao){   
 
             case 0:
                 printf("Desligando...");
             break;
 
             case 1:
-                carregar_estoque("estoque.txt", &lista);    
-                imprimeEstoque(lista);
+                carregar_estoque("estoque.txt", &estoque);
             break;
 
             case 2:
@@ -36,12 +36,10 @@ int main(){
 
             case 3:
                 carregar_historico("historico_vendas.txt", &hv);
-                imprimeHistorico(hv);
             break;
 
             case 4:
-                carregar_clientes_pedidos("clientes_pedidos.txt", &cl, lista);
-                imprimeClientes(cl);
+                carregar_clientes_pedidos("clientes_pedidos.txt", &cl, estoque);
             break;
 
             case 5:{
@@ -49,44 +47,45 @@ int main(){
                 int codigo, quantidade;
                 char nome[30], categoria[30];
 
-                printf("Digite o codigo do produto: \n");
+                printf("Digite o Codigo do Produto: \n");
                 scanf("%d", &codigo);
-                printf("Digite o nome do produto: \n");
+                printf("Digite o Nome do Produto: \n");
                 scanf("%s", nome);
-                printf("Digite a categoria do produto: \n");
+                setbuf(stdin, NULL);
+                printf("Digite a Categoria do Produto: \n");
                 scanf("%s", categoria);
-                printf("Digite a quantidade de estoque: \n");
+                setbuf(stdin, NULL);
+                printf("Digite a Quantidade de Estoque: \n");
                 scanf("%d", &quantidade);
 
-                insereProduto(&lista, codigo, nome, quantidade, categoria);
+                insereProduto(&estoque, codigo, nome, quantidade, categoria);
 
                 printf("\nProduto Inserido!\n");
 
-                break;
-            }
+            } break;
 
             case 6:{
                 
                 int id_pedido, id_cliente, id_codigo_produto, quantidade;
                 char nome[30];
                 
-                printf("Digite o ID do cliente: \n");
+                printf("Digite o ID do Cliente: \n");
                 scanf("%d", &id_cliente);
-                printf("Digite o nome do cliente: \n");
+                printf("Digite o Nome do Cliente: \n");
                 scanf("%s", nome);
-                printf("Digite o ID do pedido: \n");
+                setbuf(stdin, NULL);
+                printf("Digite o ID do Pedido: \n");
                 scanf("%d", &id_pedido);
-                printf("Digite o ID codigo do produto: \n");
+                printf("Digite o ID do Produto: \n");
                 scanf("%d", &id_codigo_produto);
-                printf("Digite a quantidade: \n");
+                printf("Digite a Quantidade: \n");
                 scanf("%d", &quantidade);
 
-                insereCliente(&cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, lista);
+                insereCliente(&cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, estoque);
                 
-                printf("\nNova venda inserida!\n");
+                printf("\nNova Venda Inserida!\n");
 
-                break;
-            }
+            } break;
                 
             case 7:{
 
@@ -97,44 +96,57 @@ int main(){
                 scanf("%d", &id_cliente);
                 printf("Digite o nome do novo cliente: \n");
                 scanf("%s", nome_cliente);
+                setbuf(stdin, NULL);
 
-                Cliente *existe = buscarCliente(cl, id_cliente, nome_cliente);//busca para ver se ja existe
+                Cliente *existe = buscarCliente(cl, id_cliente, nome_cliente); //verificar se o cliente existe
 
                 if(existe){
 
-                    printf("\nCliente ja cadastrado!\n");
+                    printf("\nCliente Ja Cadastrado!\n");
                 }
 
-                else{
-                    //se caso nao existe, ira alocar normalmente um novo cliente
+                else{ //caso nao exista, aloque o novo cliente
+                    
                     Cliente *novo = alocarCliente(id_cliente, nome_cliente);
                     
                     novo->prox = cl; 
                     cl = novo; 
 
-                    printf("\nCliente novo cadastrado!\n");
+                    printf("\nCliente Novo Cadastrado!\n");
                 }
 
                 break;
             }
 
             case 8:
-               //processar_pedidos();
+                processar_pedidos(cl, estoque);
             break;
 
             case 9:
-                prever_compras(hv);
+                imprimeEstoque(estoque);
             break;
 
             case 10:
-                //relatorio_final();
+                imprimeClientes(cl);
             break;
             
+            case 11:
+                imprimeHistorico(hv);
+            break;
+
+            case 12:
+                prever_compras(hv);
+            break;
+
+            case 13:
+                //relatorio_final();
+            break;
+
             default:
                 printf("\nOpcao invalida, tente novamente.\n");
         }
 
-    }while(opc != 0);
+    }while(opcao != 0);
 
     //liberar_memoria();
 

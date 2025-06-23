@@ -35,19 +35,20 @@ typedef struct Cliente{
     struct Cliente *prox; 
 }Cliente; 
 
-//carregar estoque
+//Estoque
 Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade);
 void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]);
 void imprimeEstoque(Produto *p);
 void carregar_estoque(char *tipo_arquivo, Produto **p);
+int atualizar_estoque(Produto *estoque, int codigo_produto, int quantidade);
 
-//carregar historico
+//Historico Vendas
 HistoricoVendas *alocarHistorico(int codigo, int vendas[]);
 void insereHistorico(HistoricoVendas **hv, int codigo, int vendas[]);
 void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv);
 void imprimeHistorico(HistoricoVendas *hv);
 
-//carregar pedidos
+//Clientes, Pedidos e Itens de Pedidos
 Cliente *alocarCliente(int id_cliente, char nome[]);
 Pedido *alocarPedidos(int id_pedido);
 PedidoItem *alocarItens(int codigo_produto, int quantidade);
@@ -57,8 +58,13 @@ void insereItens(PedidoItem **pedidoitem, int codigo_produto, int quantidade, Pr
 void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoque);
 Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]);
 void imprimeClientes(Cliente *cl);
-Produto *processar_pedidos(int codigo_produto, Produto *estoque);
+void processar_pedidos(Cliente *cl, Produto *p);
 
+//Funcoes Extras
 void prever_compras(HistoricoVendas *hv);
+void relatorioFinal();
+void liberarEstoque();
+void liberarHistorico();
+void liberarClientes();
 
 #endif

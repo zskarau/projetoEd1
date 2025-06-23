@@ -3,6 +3,7 @@
 #include <string.h>
 #include "funcoes.h"
 
+//ESTOQUE
 Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade){
 
     Produto *novo = NULL;
@@ -27,15 +28,16 @@ void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char ca
     }
 }
 
-void imprimeEstoque(Produto *p){
+void imprimeEstoque(Produto *aux){
 
-    Produto *aux = p;
-    if(!aux) printf("Lista vazia\n");
-    else{
-        while(aux){
-            printf("Cod: %d Nome: %s Qntd: %d Cat: %s\n", aux->codigo, aux->nome, aux->quantidade, aux->categoria);
-            aux = aux->prox;
-        }
+    if(!aux){
+        printf("\nEstoque Vazio!\n");
+        return;
+    }
+
+    while(aux){
+        printf("Cod: %d Nome: %s Qntd: %d Cat: %s\n", aux->codigo, aux->nome, aux->quantidade, aux->categoria);
+        aux = aux->prox;
     }
 }
 
@@ -44,6 +46,11 @@ void carregar_estoque(char *tipo_arquivo, Produto **p){
     FILE *arquivo = fopen(tipo_arquivo, "r");
     if(!arquivo) printf("Não foi possível abrir o arquivo.");
     else{
+        if(*p){
+            printf("\nEstoque Ja Carregado!\n");
+            return;
+        }
+
         int codigo, quantidade;
         char nome[20], categoria[20];
         while(fscanf(arquivo, "%d%s%d%s", &codigo, nome, &quantidade, categoria) != EOF){
@@ -55,6 +62,7 @@ void carregar_estoque(char *tipo_arquivo, Produto **p){
     }
 }
 
+//HISTORICO
 HistoricoVendas *alocarHistorico(int codigo, int vendas[]){
 //laço para alocar o historico usando for, pq e necessário um vetor de 4 inteiros nas vendas
     int i;
@@ -94,6 +102,12 @@ void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv){
     }
 
     else{
+
+        if(*hv){
+            printf("\nHistorico Ja Carregado!\n");
+            return;
+        }
+
         int codigo, vendas[4];
 
         while(fscanf(arquivo, "%d%d%d%d%d", &codigo, &vendas[0], &vendas[1], &vendas[2], &vendas[3]) != EOF){
@@ -105,21 +119,21 @@ void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv){
     }
 }
 
-void imprimeHistorico(HistoricoVendas *hv){
+void imprimeHistorico(HistoricoVendas *temp){
 //imprime o historico de vendas
-    HistoricoVendas *temp = hv;
 
-    if(temp == NULL){
-        printf("\nLista vazia\n");
+    if(!temp){
+        printf("\nHistorico Vazio!\n");
         return;
     }
 
     while(temp){
-        printf("Codigo: %d Venda 1: %d Venda 2: %d Venda 3: %d Venda 4: %d\n", temp->codigo, temp->vendas[0], temp->vendas[1], temp->vendas[2], temp->vendas[3]);
+        printf("Codigo: %d \nVenda 1: %d Venda 2: %d Venda 3: %d Venda 4: %d\n\n", temp->codigo, temp->vendas[0], temp->vendas[1], temp->vendas[2], temp->vendas[3]);
         temp = temp->prox;
     }
 }
 
+//CLIENTES, PEDIDOS E ITENS DE PEDIDO
 Cliente *alocarCliente(int id_cliente, char nome[]){
     
     Cliente *cl = NULL;
@@ -217,25 +231,12 @@ PedidoItem *alocarItens(int codigo_produto, int quantidade){
 
 void insereItens(PedidoItem **pedidoItem, int codigo_produto, int quantidade, Produto *estoque){
 
-    Produto *aux = processar_pedidos(codigo_produto, estoque);
-
-    if(!aux){
-        printf("Produto Não Encontrado!\n");
-        return;
-    }
-
-    if(aux->quantidade < quantidade){
-        printf("Quantidade em Estoque Não Suficente!\n");
-        return;
-    }
-
     PedidoItem *novo = NULL;
     novo = alocarItens(codigo_produto, quantidade);
     
     if(novo){
         novo->prox = *pedidoItem;
         *pedidoItem = novo;
-        aux->quantidade -= quantidade;
     }
 }
 
@@ -243,33 +244,38 @@ void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoqu
     FILE *arquivo = fopen(tipo_arquivo, "r");
 
     if(!arquivo){
-        printf("Não foi possível abrir o arquivo.\n");
+        printf("\nNão foi possível abrir o arquivo.\n");
         return;
     }
 
-    if(!estoque){ //não há produtos no estoque
-        printf("Estoque Vazio!\n");
+    if(*cl){
+
+        printf("\nClientes Ja Carregados!\n");
+        return;
     }
 
-    else{
-        int id_cliente, id_pedido, id_codigo_produto, quantidade;
-        char nome[30];
+    int id_cliente, id_pedido, id_codigo_produto, quantidade;
+    char nome[30];
 
-        while(fscanf(arquivo, "%d%s%d%d%d", &id_cliente, nome, &id_pedido, &id_codigo_produto, &quantidade) != EOF){
-            
-            insereCliente(cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, estoque);
+    while(fscanf(arquivo, "%d%s%d%d%d", &id_cliente, nome, &id_pedido, &id_codigo_produto, &quantidade) != EOF){
+        
+        insereCliente(cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, estoque);
 
-        }
-
-        fclose(arquivo);
-        printf("Clientes Carregados!\n");
     }
+
+    fclose(arquivo);
+    printf("\nClientes Carregados!\n");
 }
 
 void imprimeClientes(Cliente *cl){
     
+    if(!cl){
+        printf("\nNao Ha Clientes!\n");
+        return;
+    }
+
     while(cl){
-        printf("Id: %d Nome: %s\n", cl->id_cliente, cl->nome);
+        printf("\nId: %d Nome: %s\n", cl->id_cliente, cl->nome);
         Pedido *pedido = cl->pedidos;
 
         while(pedido){
@@ -288,17 +294,63 @@ void imprimeClientes(Cliente *cl){
 
 }
 
-Produto *processar_pedidos(int codigo_produto, Produto *estoque){
-    
-    Produto *aux = estoque;
+int atualizar_estoque(Produto *estoque, int codigo_produto, int quantidade){
+    Produto *paux = estoque;
 
-    while(aux){
-        if(aux->codigo == codigo_produto){ //achou o produto que o cliente pediu
-            return aux;
+    while(paux){
+        if(paux->codigo == codigo_produto){ //achou o produto pedido
+            if(paux->quantidade >= quantidade) { //verifica se ha quantidade em estoque
+                paux->quantidade -= quantidade;
+                return 1;
+
+            } 
+            else{
+                printf("Nao Ha Produto %d Suficiente!\n", codigo_produto);
+                return 0;
+            }
         }
-        aux = aux->prox;
+        paux = paux->prox;
     }
-    return NULL;
+
+    printf("Produto %d Nao Encontrado!\n", codigo_produto);
+    return 0;
+}
+
+
+void processar_pedidos(Cliente *cl, Produto *p){
+    
+    if (!cl){
+        printf("\nNao Ha Clientes!\n");
+        return;
+    }
+
+    if (!p){
+        printf("\nNao Ha Produtos!\n");
+        return;
+    }
+
+    Cliente *claux = cl;
+
+    while (claux){
+        printf("\nPedidos do Cliente %d: %s\n", claux->id_cliente, claux->nome);
+
+        Pedido *pedido = claux->pedidos;
+
+        if (!pedido) printf("Cliente %s Sem Pedidos!\n", claux->nome);
+
+        while (pedido){
+            PedidoItem *item = pedido->itens;
+
+            while (item){
+                if (atualizar_estoque(p, item->codigo_produto, item->quantidade))
+                    printf("%d do Produto %d Adquiridos!\n", item->quantidade, item->codigo_produto);
+
+                item = item->prox;
+            }
+            pedido = pedido->prox;
+        }
+        claux = claux->prox;
+    }
 }
 
 void prever_compras(HistoricoVendas *hv){
@@ -318,4 +370,20 @@ void prever_compras(HistoricoVendas *hv){
         printf("Produto %d - Media = %.2f unidades vendidas\n", temp->codigo, mediavendas);
         temp = temp->prox;
     }
+}
+
+void relatorioFinal(){
+    return;
+}
+
+void liberarEstoque(){
+    return;
+}
+
+void liberarHistorico(){
+    return;
+}
+
+void liberarClientes(){
+    return;
 }
