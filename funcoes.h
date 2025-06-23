@@ -35,14 +35,36 @@ typedef struct Cliente{
     struct Cliente *prox; 
 }Cliente; 
 
-Produto *alocar(int codigo, char nome[], char categoria[], int quantidade);
-void inserirProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]);
-void imprimir(Produto *p);
+//Estoque
+Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade);
+void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]);
+void imprimeEstoque(Produto *p);
 void carregar_estoque(char *tipo_arquivo, Produto **p);
+int atualizar_estoque(Produto *estoque, int codigo_produto, int quantidade);
+
+//Historico Vendas
+HistoricoVendas *alocarHistorico(int codigo, int vendas[]);
 void insereHistorico(HistoricoVendas **hv, int codigo, int vendas[]);
 void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv);
-void imprimirHistorico(HistoricoVendas *hv);
+void imprimeHistorico(HistoricoVendas *hv);
+
+//Clientes, Pedidos e Itens de Pedidos
+Cliente *alocarCliente(int id_cliente, char nome[]);
+Pedido *alocarPedidos(int id_pedido);
+PedidoItem *alocarItens(int codigo_produto, int quantidade);
+void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque);
+void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque);
+void insereItens(PedidoItem **pedidoitem, int codigo_produto, int quantidade, Produto *estoque);
+void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoque);
+Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]);
+void imprimeClientes(Cliente *cl);
+void processar_pedidos(Cliente *cl, Produto *p);
+
+//Funcoes Extras
 void prever_compras(HistoricoVendas *hv);
-void processar_pedidos(char *tipo_arquivo, Produto **p);
+void relatorioFinal();
+void liberarEstoque();
+void liberarHistorico();
+void liberarClientes();
 
 #endif
