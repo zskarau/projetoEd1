@@ -15,7 +15,7 @@ int main(){
         printf("\n0 - Sair \n1 - Carregar Dados do Estoque \n2 - Carregar Precos \n3 - Carregar Historico\n4 - Carregar Pedidos\n");
         printf("5 - Inserir Novo Produto \n6 - Inserir Nova Venda \n7 - Inserir Novo Cliente \n8 - Processar Pedidos\n");
         printf("9 - Estoque \n10 - Clientes e Pedidos \n11 - Historico Vendas\n");
-        printf("12 - Prever Compras \n13 - Gerar Relatorio Final\n");
+        printf("12 - Prever Compras\n");
         printf("\n==========|||||==========\n");   
         printf("\n");     
         scanf("%d", &opcao);
@@ -23,7 +23,7 @@ int main(){
         switch(opcao){   
 
             case 0:
-                printf("Desligando...");
+                printf("\nDesligando...\n");
             break;
 
             case 1:
@@ -31,7 +31,7 @@ int main(){
             break;
 
             case 2:
-                //carregar_precos();
+                carregar_precos("precos.txt", estoque);
             break;
 
             case 3:
@@ -138,17 +138,28 @@ int main(){
                 prever_compras(hv);
             break;
 
-            case 13:
-                //relatorio_final();
-            break;
-
             default:
                 printf("\nOpcao invalida, tente novamente.\n");
         }
 
     }while(opcao != 0);
 
-    //liberar_memoria();
+    relatorioFinal(estoque, hv);
+
+    liberarEstoque(&estoque);
+
+    liberarHistorico(&hv);
+
+    liberarClientes(&cl);
+
+    if(!estoque && !hv && !cl){
+        
+        printf("\nMemoria liberada com sucesso!\n");
+    }
+    else{
+        
+        printf("\nErro ao liberar memoria!\n");
+    }
 
     return 0;
 }

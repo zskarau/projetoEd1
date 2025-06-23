@@ -13,6 +13,9 @@ Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade
         strcpy(novo->nome, nome);
         strcpy(novo->categoria, categoria);
         novo->quantidade = quantidade;
+        novo->precos[0] = 0;
+        novo->precos[1] = 0;
+        novo->precos[2] = 0;
         novo->prox = NULL;
     }
     return novo;
@@ -36,7 +39,8 @@ void imprimeEstoque(Produto *aux){
     }
 
     while(aux){
-        printf("Cod: %d Nome: %s Qntd: %d Cat: %s\n", aux->codigo, aux->nome, aux->quantidade, aux->categoria);
+        printf("Cod: %d Nome: %s \nQntd: %d Cat: %s\n", aux->codigo, aux->nome, aux->quantidade, aux->categoria);
+        printf("P1: R$%.2f P2: R$%.2f P3: R$%.2f\n\n", aux->precos[0], aux->precos[1], aux->precos[2]);
         aux = aux->prox;
     }
 }
@@ -58,8 +62,41 @@ void carregar_estoque(char *tipo_arquivo, Produto **p){
         }
 
         fclose(arquivo);
-        printf("Estoque Carregado!\n");
+        printf("\nEstoque Carregado!\n");
     }
+}
+
+void carregar_precos(char *tipo_arquivo, Produto *estoque){
+
+    FILE *arquivo = fopen(tipo_arquivo, "r");
+    if (!arquivo) {
+        printf("\nNao foi possivel abrir o arquivo de precos.\n");
+        return;
+    }
+
+    int codigo;
+    float preco1, preco2, preco3;
+
+    if(!estoque){
+        printf("\nEstoque inexistente!\n");
+        return;
+    }
+
+    while (fscanf(arquivo, "%d%f%f%f", &codigo, &preco1, &preco2, &preco3) != EOF){
+        Produto *aux = estoque;
+        while(aux){
+            if (aux->codigo == codigo){
+                aux->precos[0] = preco1;
+                aux->precos[1] = preco2;
+                aux->precos[2] = preco3;
+                break;
+            }
+            aux = aux->prox;
+        }
+    }
+
+    fclose(arquivo);
+    printf("\nPrecos Carregados!\n");
 }
 
 //HISTORICO
@@ -121,7 +158,6 @@ void carregar_historico(char *tipo_arquivo, HistoricoVendas **hv){
 
 void imprimeHistorico(HistoricoVendas *temp){
 //imprime o historico de vendas
-
     if(!temp){
         printf("\nHistorico Vazio!\n");
         return;
@@ -353,6 +389,19 @@ void processar_pedidos(Cliente *cl, Produto *p){
     }
 }
 
+float funcaoMediaVendas(HistoricoVendas *hv){
+    
+    float soma = 0.0;
+    int i;
+
+    for(i = 0; i < 4; i++){
+        soma += hv->vendas[i];
+        
+    }
+    
+    return soma / 4;
+}
+
 void prever_compras(HistoricoVendas *hv){
 //prever compra de cada codigo de produto do historico de vendas usando while
     HistoricoVendas *temp = hv;
@@ -366,24 +415,118 @@ void prever_compras(HistoricoVendas *hv){
 
     while(temp){
 
-        mediavendas = (temp->vendas[0] + temp->vendas[1] + temp->vendas[2] + temp->vendas[3]) / 4.0;
+        mediavendas = funcaoMediaVendas(temp);
         printf("Produto %d - Media = %.2f unidades vendidas\n", temp->codigo, mediavendas);
         temp = temp->prox;
     }
 }
 
-void relatorioFinal(){
-    return;
+void liberarEstoque(Produto **estoque){
+    
+    Produto *temp = NULL;
+    
+    while(*estoque){
+
+        temp = *estoque;
+        *estoque = (*estoque)->prox;
+        free(temp);
+    }
+    
+    printf("\nMemoria do estoque liberado!\n");
 }
 
-void liberarEstoque(){
-    return;
+void liberarHistorico(HistoricoVendas **hv){
+    
+    HistoricoVendas *temp = NULL;
+
+    while(*hv){
+        temp = *hv;
+        *hv = (*hv)->prox;
+        free(temp);
+    }
+
+    printf("\nMemoria do historico de vendas liberada!\n");
 }
 
-void liberarHistorico(){
-    return;
+void liberarPedidosItens(PedidoItem *itens){
+    PedidoItem *aux = NULL;
+
+    while(itens){
+        aux = itens;
+        itens = itens->prox;
+        free(aux);
+    }
 }
 
-void liberarClientes(){
-    return;
+void liberarPedidos(Pedido *pedidos){
+    Pedido *aux = NULL;
+
+    while(pedidos){
+        liberarPedidosItens(pedidos->itens);
+        aux = pedidos;
+        pedidos = pedidos->prox;
+        free(aux);
+    }
+}
+
+void liberarClientes(Cliente **cl){
+    Cliente *temp = NULL;
+
+    while(*cl){
+        temp = *cl;
+        *cl = (*cl)->prox;
+
+        liberarPedidos(temp->pedidos);
+        free(temp);
+    }
+
+    printf("\nMemoria dos clientes liberada!\n");
+}
+
+float funcaoMediaPrecos(Produto *estoque){
+    
+
+    float soma = 0.0;
+    int i;
+
+    for(i=0; i < 3; i++){
+        
+        soma += estoque->precos[i];      
+    }
+    
+    return soma / 3;
+}
+
+void relatorioFinal(Produto *p, HistoricoVendas *hv){
+    FILE *arquivo = fopen("relatorio.txt", "w");
+
+    if(!arquivo){
+        printf("\nErro ao criar arquivo!\n");
+        return;
+    }
+
+    Produto *paux = p;
+
+    while(paux){
+        int e = 0;
+        HistoricoVendas *phv = hv;
+
+        while(phv){
+            if(paux->codigo == phv->codigo){
+                fprintf(arquivo, "Produto %d\n", paux->codigo);
+                fprintf(arquivo, "Qntd: %d\n", paux->quantidade);
+                fprintf(arquivo, "Media Precos: R$%.2f\n", funcaoMediaPrecos(paux));
+                fprintf(arquivo, "Sugestao Reposicao: %.2f unidades\n\n", funcaoMediaVendas(phv) * 1.2);
+                e = 1;
+                break;
+            }
+            phv = phv->prox;
+        }
+
+        if(!e){
+            fprintf(arquivo, "Produto %d sem vendas registradas!\n\n", paux->codigo);
+        }
+
+        paux = paux->prox;
+    }
 }
