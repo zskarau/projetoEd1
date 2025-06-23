@@ -41,6 +41,7 @@ void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char ca
 void imprimeEstoque(Produto *p);
 void carregar_estoque(char *tipo_arquivo, Produto **p);
 int atualizar_estoque(Produto *estoque, int codigo_produto, int quantidade);
+void carregar_precos(char *tipo_arquivo, Produto *estoque);
 
 //Historico Vendas
 HistoricoVendas *alocarHistorico(int codigo, int vendas[]);
@@ -62,9 +63,13 @@ void processar_pedidos(Cliente *cl, Produto *p);
 
 //Funcoes Extras
 void prever_compras(HistoricoVendas *hv);
-void relatorioFinal();
-void liberarEstoque();
-void liberarHistorico();
-void liberarClientes();
+void relatorioFinal(Produto *p, HistoricoVendas *hv);
+void liberarEstoque(Produto **estoque);
+void liberarHistorico(HistoricoVendas **hv);
+void liberarClientes(Cliente **cl);
+void liberarPedidosItens(PedidoItem *itens);
+void liberarPedidos(Pedido *pedidos);
+float funcaoMediaVendas(HistoricoVendas *hv);
+float funcaoMediaPrecos(Produto *estoque);
 
 #endif

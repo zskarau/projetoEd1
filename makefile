@@ -10,6 +10,10 @@ SRC = agrotec.c funcoes.c
 # Output binary
 OUT = saida
 
+EXEC = saida.exe
+
+RELATORIO = relatorio.txt
+
 # Default rule
 all: $(OUT)
 	./$(OUT)
@@ -20,4 +24,5 @@ $(OUT): $(SRC)
 
 # Clean rule to remove the compiled binary
 clean:
-	del /f /q $(OUT).exe 2>nul || exit 0
+	@if exist $(EXEC) del /Q $(EXEC)
+	@if exist $(RELATORIO) del /Q $(RELATORIO)
