@@ -515,6 +515,7 @@ void relatorioFinal(Produto *p, HistoricoVendas *hv){
             if(paux->codigo == phv->codigo){
                 fprintf(arquivo, "Produto %d\n", paux->codigo);
                 fprintf(arquivo, "Qntd: %d\n", paux->quantidade);
+                if(paux->quantidade == 0) fprintf(arquivo, "(Necessário Reposição do Produto!)\n");
                 fprintf(arquivo, "Media Precos: R$%.2f\n", funcaoMediaPrecos(paux));
                 fprintf(arquivo, "Sugestao Reposicao: %.2f unidades\n\n", funcaoMediaVendas(phv) * 1.2);
                 e = 1;
