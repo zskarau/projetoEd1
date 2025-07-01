@@ -37,6 +37,7 @@ typedef struct Cliente{
 
 //Estoque
 Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade);
+Produto *buscarProduto(Produto *p, int codigo);
 void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]);
 void imprimeEstoque(Produto *p);
 void carregar_estoque(char *tipo_arquivo, Produto **p);
@@ -57,7 +58,7 @@ void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int
 void inserePedido(Pedido **pedidos, int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque);
 void insereItens(PedidoItem **pedidoitem, int codigo_produto, int quantidade, Produto *estoque);
 void carregar_clientes_pedidos(char *tipo_arquivo, Cliente **cl, Produto *estoque);
-Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]);
+Cliente *buscarCliente(Cliente *cl, int id_cliente);
 void imprimeClientes(Cliente *cl);
 void processar_pedidos(Cliente *cl, Produto *p);
 

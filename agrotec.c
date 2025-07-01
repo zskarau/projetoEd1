@@ -49,19 +49,26 @@ int main(){
 
                 printf("Digite o Codigo do Produto: \n");
                 scanf("%d", &codigo);
-                printf("Digite o Nome do Produto: \n");
-                scanf("%s", nome);
-                setbuf(stdin, NULL);
-                printf("Digite a Categoria do Produto: \n");
-                scanf("%s", categoria);
-                setbuf(stdin, NULL);
-                printf("Digite a Quantidade de Estoque: \n");
+
+                Produto *existe = buscarProduto(estoque, codigo);
+
+                if(!existe){
+                    printf("Digite o Nome do Produto: \n");
+                    scanf("%s", nome);
+                    setbuf(stdin, NULL);
+                    printf("Digite a Categoria do Produto: \n");
+                    scanf("%s", categoria);
+                    setbuf(stdin, NULL);
+                    printf("Digite a Quantidade de Estoque: \n");
+                    scanf("%d", &quantidade);
+                    insereProduto(&estoque, codigo, nome, quantidade, categoria);
+                    printf("\nProduto Inserido!\n");
+                    break;
+                }
+
+                printf("Produto encontrado no estoque. Quantidade a Adicionar: ");
                 scanf("%d", &quantidade);
-
-                insereProduto(&estoque, codigo, nome, quantidade, categoria);
-
-                printf("\nProduto Inserido!\n");
-
+                insereProduto(&existe, codigo, nome, quantidade, categoria);
             } break;
 
             case 6:{
@@ -71,20 +78,24 @@ int main(){
                 
                 printf("Digite o ID do Cliente: \n");
                 scanf("%d", &id_cliente);
-                printf("Digite o Nome do Cliente: \n");
-                scanf("%s", nome);
-                setbuf(stdin, NULL);
-                printf("Digite o ID do Pedido: \n");
-                scanf("%d", &id_pedido);
-                printf("Digite o ID do Produto: \n");
-                scanf("%d", &id_codigo_produto);
-                printf("Digite a Quantidade: \n");
-                scanf("%d", &quantidade);
-
-                insereCliente(&cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, estoque);
                 
-                printf("\nNova Venda Inserida!\n");
+                Cliente *existe = buscarCliente(cl, id_cliente);
+                
+                if(existe){
+                    printf("Digite o ID do Pedido: \n");
+                    scanf("%d", &id_pedido);
+                    printf("Digite o ID do Produto: \n");
+                    scanf("%d", &id_codigo_produto);
+                    printf("Digite a Quantidade: \n");
+                    scanf("%d", &quantidade);
 
+                    insereCliente(&cl, id_cliente, nome, id_pedido, id_codigo_produto, quantidade, estoque);
+                    
+                    printf("\nNova Venda Inserida!\n");
+                    break;
+                }
+
+                printf("Cliente Nao Encontrado!\n");
             } break;
                 
             case 7:{
@@ -94,26 +105,25 @@ int main(){
 
                 printf("Digite o ID do novo cliente: \n");
                 scanf("%d", &id_cliente);
-                printf("Digite o nome do novo cliente: \n");
-                scanf("%s", nome_cliente);
-                setbuf(stdin, NULL);
 
-                Cliente *existe = buscarCliente(cl, id_cliente, nome_cliente); //verificar se o cliente existe
+                Cliente *existe = buscarCliente(cl, id_cliente); //verificar se o cliente existe
 
                 if(existe){
 
                     printf("\nCliente Ja Cadastrado!\n");
+                    break;
                 }
 
-                else{ //caso nao exista, aloque o novo cliente
+                printf("Digite o nome do novo cliente: \n");
+                scanf("%s", nome_cliente);
+                setbuf(stdin, NULL);
                     
-                    Cliente *novo = alocarCliente(id_cliente, nome_cliente);
-                    
-                    novo->prox = cl; 
-                    cl = novo; 
+                Cliente *novo = alocarCliente(id_cliente, nome_cliente);
+                
+                novo->prox = cl; 
+                cl = novo; 
 
-                    printf("\nCliente Novo Cadastrado!\n");
-                }
+                printf("\nCliente Novo Cadastrado!\n");
 
                 break;
             }

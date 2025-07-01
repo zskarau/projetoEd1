@@ -23,12 +23,27 @@ Produto *alocarProduto(int codigo, char nome[], char categoria[], int quantidade
 
 void insereProduto(Produto **p, int codigo, char nome[], int quantidade, char categoria[]){
 
-    Produto *aux = NULL;
-    aux = alocarProduto(codigo, nome, categoria, quantidade);
-    if(aux){
-        aux->prox = *p;
-        *p = aux;
+    Produto *novo = buscarProduto(*p, codigo);
+
+    if(!novo){ //não existe produto com este codigo
+        novo = alocarProduto(codigo, nome, categoria, quantidade);
+        novo->prox = *p;
+        *p = novo;
+        return;
     }
+
+    //se existe produto com este codigo
+    novo->quantidade += quantidade;
+}
+
+Produto *buscarProduto(Produto *p, int codigo){
+    while(p){
+        if(p->codigo == codigo){
+            return p;
+        }
+        p = p->prox;
+    }
+    return NULL;
 }
 
 void imprimeEstoque(Produto *aux){
@@ -185,10 +200,10 @@ Cliente *alocarCliente(int id_cliente, char nome[]){
     return cl;
 }
 
-Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]){
+Cliente *buscarCliente(Cliente *cl, int id_cliente){
 
     while(cl){
-        if(cl->id_cliente == id_cliente && !strcmp(cl->nome, nome)){
+        if(cl->id_cliente == id_cliente){
             return cl;
         }
         cl = cl->prox;
@@ -198,7 +213,7 @@ Cliente *buscarCliente(Cliente *cl, int id_cliente, char nome[]){
 
 void insereCliente(Cliente **cl, int id_cliente, char nome[], int id_pedido, int id_codigo_produto, int quantidade, Produto *estoque){
 
-    Cliente *novo = buscarCliente(*cl, id_cliente, nome);
+    Cliente *novo = buscarCliente(*cl, id_cliente);
 
     if(!novo){
         novo = alocarCliente(id_cliente, nome);
